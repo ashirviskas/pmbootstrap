@@ -30,7 +30,7 @@ from pmb.config.merge_with_args import merge_with_args
 #
 # Exported variables (internal configuration)
 #
-version = "0.4.0"
+version = "0.5.0"
 pmb_src = os.path.normpath(os.path.realpath(__file__) + "/../../..")
 apk_keys_path = pmb_src + "/keys"
 
@@ -46,8 +46,7 @@ work_version = "1"
 
 # Only save keys to the config file, which we ask for in 'pmbootstrap init'.
 config_keys = ["ccache_size", "device", "extra_packages", "jobs", "keymap",
-               "qemu_native_mesa_driver", "timestamp_based_rebuild", "timezone",
-               "ui", "user", "work"]
+               "qemu_native_mesa_driver", "timezone", "ui", "user", "work"]
 
 # Config file/commandline default values
 # $WORK gets replaced with the actual value for args.work (which may be
@@ -73,7 +72,6 @@ defaults = {
     "mirror_postmarketos": "http://postmarketos.brixit.nl",
     "port_distccd": "33632",
     "qemu_native_mesa_driver": "dri-virtio",
-    "timestamp_based_rebuild": True,
     "timezone": "GMT",
     "ui": "weston",
     "user": "user",

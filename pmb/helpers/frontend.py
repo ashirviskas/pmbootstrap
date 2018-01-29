@@ -29,7 +29,6 @@ import pmb.aportgen
 import pmb.build
 import pmb.build.autodetect
 import pmb.config
-import pmb.challenge
 import pmb.chroot
 import pmb.chroot.initfs
 import pmb.chroot.other
@@ -144,17 +143,16 @@ def build(args):
     # Build all packages
     for package in args.packages:
         arch_package = args.arch or pmb.build.autodetect.arch(args, package)
-        pmb.build.package(args, package, arch_package, args.force,
-                          args.buildinfo, args.strict)
+        if not pmb.build.package(args, package, arch_package, args.force,
+                                 args.buildinfo, args.strict):
+            logging.info("NOTE: Package '" + package + "' is up to date. Use"
+                         " 'pmbootstrap build " + package + " --force'"
+                         " if needed.")
 
 
 def build_init(args):
     suffix = _parse_suffix(args)
     pmb.build.init(args, suffix)
-
-
-def challenge(args):
-    pmb.challenge.frontend(args)
 
 
 def checksum(args):
@@ -199,6 +197,12 @@ def initfs(args):
 
 
 def install(args):
+    if args.rsync and args.full_disk_encryption:
+        raise ValueError("Installation using rsync is not compatible with full"
+                         " disk encryption.")
+    if args.rsync and not args.sdcard:
+        raise ValueError("Installation using rsync only works on sdcard.")
+
     pmb.install.install(args)
 
 

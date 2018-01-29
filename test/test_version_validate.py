@@ -17,17 +17,21 @@ You should have received a copy of the GNU General Public License
 along with pmbootstrap.  If not, see <http://www.gnu.org/licenses/>.
 """
 import os
-import logging
-import pmb.challenge
+import sys
+
+# Import from parent directory
+sys.path.append(os.path.realpath(
+    os.path.join(os.path.dirname(__file__) + "/..")))
+import pmb.parse.version
 
 
-def frontend(args):
-    path = args.challenge_file
-    logging.info("Challenge " + path)
-    if path.endswith(".apk"):
-        pmb.challenge.build(args, path)
-    elif os.path.basename(path) == "APKINDEX.tar.gz":
-        pmb.challenge.apkindex(args, path)
-    else:
-        raise ValueError("It is only possible to challenge files ending"
-                         " in .apk or files named APKINDEX.tar.gz.")
+def test_version_validate():
+    func = pmb.parse.version.validate
+
+    assert func("6.0_1") is False
+    assert func("6.0_invalidsuffix1") is False
+    assert func("6.0.0002") is True
+    assert func("6.0.234") is True
+
+    # Issue #1144
+    assert func("6.0_0002") is False
